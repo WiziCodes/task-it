@@ -1,16 +1,23 @@
 import { NextResponse } from "next/server";
 import * as repo from "@/repositories/task.repository"
 
-export async function PUT(req:Request){ 
-    const {id, title, description, status, category_id} = await req.json();
+export async function PUT(req:Request,  context: { params: Promise<{ id: string }> }){ 
+    const {title, description, status, category_id } = await req.json();
+    const { id: idParam } = await context.params; 
+    const id = Number(idParam);
     await repo.updateTask(id, title, description, status, category_id);
-    return NextResponse.json({message: "Task updated successfully"},{ status: 200 })
+    return NextResponse.json({ message: "Task updated successfully" }, { status: 200 })
+    // Fix: You previous code is calling the id from the body of the request (req.json) which should't be
+    // so i am now calling it from the context.params
+    // which is [id] in your folder structure / url i.e task/[id]
 }
 
-export async function DELETE(req:Request){
-    const {id} = await req.json();
+export async function DELETE(req:Request, context: { params: Promise<{ id: string }> }){
+    const { id: idParam } = await context.params; 
+    const id = Number(idParam);
     await repo.deleteTask(id);
-    return NextResponse.json({message: "Task deleted successfully"},{ status: 200 })
+    return NextResponse.json({ message: "Task deleted successfully" }, { status: 200 })
+    // Fix: thesame thing applies here
 }
 
 export async function GET(req:Request) {

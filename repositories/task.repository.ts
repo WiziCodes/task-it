@@ -2,6 +2,9 @@ import pool from "@/lib/db";
 import { Task, TaskStatus } from "@/types/task";
 import { get } from "http";
 
+console.log({user:process.env.DB_USER, pswrd:process.env.DB_PASSWORD});
+
+
 //Get single task by id
 export const getTaskById = async (id: number): Promise<Task | null> => {
     const [rows] = await pool.query<Task[]>(
